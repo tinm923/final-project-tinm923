@@ -1,8 +1,12 @@
 #include "pyvis/PythonVisualizer.h"
+#include "writer.h"
 #include <vector>
+#include <iostream>
 
-constexpr int size = 100;//size of the grid
-
+int size;//size of the grid
+//make configurabel by argv need to convert argv to int and assign 
+//in main, also get rid of constexpr
+//need more of the test outputs to compare
 //checks for a critical position in the sandpile
 bool critical(std::vector<std::vector<int>> pile){
     bool isCritical = false;
@@ -18,8 +22,14 @@ bool critical(std::vector<std::vector<int>> pile){
     return isCritical;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc != 2)
+    {
+        std::cerr << "You must enter a size of grid to use!" << std::endl;
+        return 1;
+    }
+    size = std::stoi(argv[1]);
     using Sandpile = std::vector<std::vector<int>>;
     using SandpileStates = std::vector<Sandpile>;
     
@@ -114,8 +124,9 @@ int main()
         //push back the state after every run through the sandpile
         data.push_back(sand);
     }
+    write_data(sand);
     //make the python visualizer to display the bokeh plot
-    py::PythonVisualizer pyvis({".."});
+    py::PythonVisualizer pyvis({"../.."});
     auto figure = pyvis.make_new_figure("Abelian Sandpile Model", py::kwarg("x_range", std::vector<int>{0,size}),  py::kwarg("y_range", std::vector<int>{0,size}));
     auto ticker = pyvis.ticker("BasicTicker");
     auto color_mapper = pyvis.color_mapper("LinearColorMapper", py::kwarg("palette", "Spectral11"), py::kwarg("low", 0), py::kwarg("high", 10));

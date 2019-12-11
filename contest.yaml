@@ -1,0 +1,21 @@
+executable: main.exe
+test-cases:
+  small:    
+    argv: ["5"]
+    ofstream:
+      - base-file: test_file/sandpile5.dat
+        test-file: sandpile.dat
+  medium:    
+    argv: ["50"]
+    ofstream:
+      - base-file: test_file/sandpile50.dat
+        test-file: sandpile.dat
+  large:    
+    argv: ["100"]
+    ofstream:
+      - base-file: test_file/sandpile100.dat
+        test-file: sandpile.dat
+  missing:
+      stderr: |
+          You must enter a size of grid to use!
+      return-code: 1
